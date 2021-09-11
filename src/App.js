@@ -7,6 +7,9 @@ import loginService from './services/login'
 const App = () => {
   const [blogs, setBlogs] = useState([])
   const [newBlog, setNewBlog] = useState('')
+  const [newTitle, setNewTitle] = useState('')
+  const [newAuthor, setNewAuthor] = useState('')
+  const [newUrl, setNewUrl] = useState('')
   const [errorMessage, setErrorMessage] = useState(null)
   const [username, setUsername] = useState('') 
   const [password, setPassword] = useState('')
@@ -90,8 +93,56 @@ const App = () => {
     return
   }
 
- 
+  const blogForm = () => (
+    <form onSubmit={addBlog}>
+      <div>
+        title:
+        <input 
+          type="text"
+          value={newTitle}
+          name="title"
+          onChange={({ target }) => setNewTitle(target.value)}
+      />
+      </div>
+      <div>
+        author:
+        <input 
+          type="text"
+          value={newAuthor}
+          name="author"
+          onChange={({ target }) => setNewAuthor(target.value)}
+      />
+      </div>
+      <div>
+        url:
+        <input 
+          type="text"
+          value={newUrl}
+          name="url"
+          onChange={({ target }) => setNewUrl(target.value)}
+      />
+      </div>
+      
+      <button type="submit">create</button>
+    </form>
+  )
   
+  const addBlog = (event) => {
+    event.preventDefault()
+    const blogObject = {
+      title: newTitle,
+      author: newAuthor,
+      url: newUrl,
+      
+    }
+
+    blogService
+      .create(blogObject)
+      .then(returnedBlogs => {
+        setBlogs(blogs.concat(returnedBlogs))
+        setNewBlog('')
+      })   
+  }
 
   return (
     <div>
@@ -99,19 +150,25 @@ const App = () => {
 
       {user === null ?
         loginForm() :         
-       ( <div>
-          <h2>Blogs</h2>
-          <p>{user.name} logged in</p>
-          {blogsToDisplay()}
+       ( 
+        <>
           <div>
-          <button onClick={() => logOut()}>         
-          Logout
-        </button>
-      </div>   
-      </div> 
-       )      
-      }   
-     
+            <h2>Blogs</h2>
+            <p>{user.name} logged in
+            <button onClick={() => logOut()}>         
+            Logout
+            </button></p>
+            
+          </div>
+          <div>          
+            <h2>Create new</h2>
+            <h2> </h2>
+            {blogForm()}
+        </div> 
+        <div>
+          {blogsToDisplay()}
+        </div>
+      </> )}    
     </div>
   )
 }
