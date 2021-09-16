@@ -1,4 +1,15 @@
-.error {
+h1 {
+    color: green;
+    font-style: italic;
+  }
+
+  .note {
+    color: grey;
+    padding-top: 5px;
+    font-size: 15px;
+  }
+
+  .error {
     color: red;
     background: lightgrey;
     font-size: 20px;
