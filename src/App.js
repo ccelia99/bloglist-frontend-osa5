@@ -4,10 +4,10 @@ import Notification from './components/Notification'
 import blogService from './services/blogs'
 import loginService from './services/login'
 
+
 const App = () => {
   const [blogs, setBlogs] = useState([])
   const [newBlog, setNewBlog] = useState('')
-  const [newTitle, setNewTitle] = useState('')
   const [newAuthor, setNewAuthor] = useState('')
   const [newUrl, setNewUrl] = useState('')
   const [errorMessage, setErrorMessage] = useState(null)
@@ -99,9 +99,9 @@ const App = () => {
         title:
         <input 
           type="text"
-          value={newTitle}
+          value={newBlog}
           name="title"
-          onChange={({ target }) => setNewTitle(target.value)}
+          onChange={({ target }) => setNewBlog(target.value)}
       />
       </div>
       <div>
@@ -130,7 +130,7 @@ const App = () => {
   const addBlog = (event) => {
     event.preventDefault()
     const blogObject = {
-      title: newTitle,
+      title: newBlog,
       author: newAuthor,
       url: newUrl,
       
@@ -139,7 +139,22 @@ const App = () => {
     blogService
       .create(blogObject)
       .then(returnedBlogs => {
+        setErrorMessage(
+          `a new blog of ${newBlog} by ${newAuthor}`
+        )
+        setTimeout(() => {
+          setErrorMessage(null)
+        }, 5000)
         setBlogs(blogs.concat(returnedBlogs))
+        setNewBlog('')
+      })
+      .catch(error => {
+        setErrorMessage(
+          `Wrong username or password`
+        )
+        setTimeout(() => {
+          setErrorMessage(null)
+        }, 5000)
         setNewBlog('')
       })   
   }
