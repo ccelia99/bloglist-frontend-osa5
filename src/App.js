@@ -12,18 +12,19 @@ const App = () => {
   const [blogs, setBlogs] = useState([])
   const [newBlog, setNewBlog] = useState('')
   const [newAuthor, setNewAuthor] = useState('')
+  // eslint-disable-next-line no-unused-vars
   const [newUrl, setNewUrl] = useState('')
   const [errorMessage, setErrorMessage] = useState(null)
-  const [username, setUsername] = useState('') 
+  const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [user, setUser] = useState(null)
-  
+
   useEffect(() => {
     blogService
-    .getAll()
-    .then(initialblogs =>
-      setBlogs( initialblogs )
-    )  
+      .getAll()
+      .then(initialblogs =>
+        setBlogs( initialblogs )
+      )
   }, [])
 
   useEffect(() => {
@@ -44,7 +45,7 @@ const App = () => {
       })
       window.localStorage.setItem(
         'loggedBlogappUser', JSON.stringify(user)
-      ) 
+      )
       blogService.setToken(user.token)
       setUser(user)
       setUsername('')
@@ -54,7 +55,7 @@ const App = () => {
       setTimeout(() => {
         setErrorMessage(null)
       }, 5000)
-    }    
+    }
   }
 
   const loginForm = () => (
@@ -79,75 +80,75 @@ const App = () => {
   const blogFormRef = useRef()
 
   const blogForm = () => (
-    <Togglable buttonLabel='new blog' ref={blogFormRef}>
+    <Togglable buttonLabel='Create new blog' ref={blogFormRef}>
       <BlogForm createBlog={addBlog} />
     </Togglable>
   )
 
   const addBlog = (blogObject) => {
     blogFormRef.current.toggleVisibility()
-    
+
     blogService
-    .create(blogObject)
-    .then(returnedBlogs => {
-      setErrorMessage(
-        `a new blog of ${newBlog} by ${newAuthor}`
-      )
-      setTimeout(() => {
-        setErrorMessage(null)
-      }, 5000)
-      setBlogs(blogs.concat(returnedBlogs))
-      setNewBlog('')
-      setNewAuthor('')
-      setNewUrl('')
-    })
-    .catch(error => {
-      setErrorMessage(
-        `Wrong username or password`
-      )
-      setTimeout(() => {
-        setErrorMessage(null)
-      }, 5000)
-      setNewBlog('')
-      setNewAuthor('')
-      setNewUrl('')
-    })   
+      .create(blogObject)
+      .then(returnedBlogs => {
+        setErrorMessage(
+          `a new blog of ${newBlog} by ${newAuthor}`
+        )
+        setTimeout(() => {
+          setErrorMessage(null)
+        }, 5000)
+        setBlogs(blogs.concat(returnedBlogs))
+        setNewBlog('')
+        setNewAuthor('')
+        setNewUrl('')
+      })
+      .catch(() => {
+        setErrorMessage(
+          'Wrong username or password'
+        )
+        setTimeout(() => {
+          setErrorMessage(null)
+        }, 5000)
+        setNewBlog('')
+        setNewAuthor('')
+        setNewUrl('')
+      })
 
   }
 
   const blogsToDisplay = () => {
     const list = blogs.map(blog =>
-      <Blog key={blog.id} blog={blog} />)  
-      
+      <Blog key={blog.id} blog={blog} />)
+
     return list
   }
-    
-  
+
+
   return (
     <div>
       <Notification message={errorMessage} />
 
       {user === null ?
-        loginForm() :         
-       ( 
-        <>
-          <div>
-            <h2>Blogs</h2>
-            <p>{user.name} logged in
-            <button onClick={() => logOut()}>         
+        loginForm() :
+        (
+          <>
+            <div>
+              <h2>Blogs</h2>
+              <p>{user.name} logged in
+                <button onClick={() => logOut()}>
             Logout
-            </button></p>
-            
-          </div>
-          <div>              
-            {blogForm()}
-          </div> 
-          <div>
-            {blogsToDisplay()}
-          </div>
-        </> )}    
-      </div>
-    )
+                </button></p>
+
+            </div>
+            <div>
+              {blogForm()}
+            </div>
+            <div>
+              {blogsToDisplay()}
+            </div>
+          </> )}
+    </div>
+  )
 }
 
 export default App
