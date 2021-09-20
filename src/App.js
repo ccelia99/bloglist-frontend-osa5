@@ -4,6 +4,7 @@ import Notification from './components/Notification'
 import LoginForm from './components/LoginForm'
 import BlogForm from './components/BlogForm'
 import Togglable from './components/Togglable'
+import Footer from './components/Footer'
 import blogService from './services/blogs'
 import loginService from './services/login'
 
@@ -127,13 +128,13 @@ const App = () => {
   return (
     <div>
       <Notification message={errorMessage} />
+      <h2>Blogs</h2>
 
       {user === null ?
         loginForm() :
         (
           <>
             <div>
-              <h2>Blogs</h2>
               <p>{user.name} logged in
                 <button onClick={() => logOut()}>
             Logout
@@ -147,6 +148,7 @@ const App = () => {
               {blogsToDisplay()}
             </div>
           </> )}
+      <Footer />
     </div>
   )
 }
